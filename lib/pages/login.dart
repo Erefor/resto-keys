@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resto_keys/components/BInput.dart';
 import 'package:resto_keys/composables/useGetTextVariant.dart';
+import 'package:resto_keys/pages/register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -32,21 +33,41 @@ class _LoginPageState extends State<LoginPage> {
                   userEmail = value;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
-              BInput(
+              const BInput(
                 label: 'Contraseña',
                 obscureText: true,
               ),
-              TextButton(
-                  style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      fixedSize: const Size(350, 60)),
-                  onPressed: () {},
-                  child: const Text(
-                    'Iniciar sesión',
-                  ))
+              SizedBox(height: 64),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: <Widget>[
+                      TextButton(
+                          style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              maximumSize: Size(150, 60),
+                              backgroundColor: Colors.blueAccent,
+                              fixedSize: const Size(150, 60)),
+                          onPressed: () {},
+                          child: const Text(
+                            'Iniciar sesión',
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegistarPage()));
+                          },
+                          child: Text('Registrarse'))
+                    ],
+                  ),
+                ],
+              )
             ],
           ),
         ),

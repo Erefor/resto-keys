@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resto_keys/pages/dashboard.dart';
 import 'package:resto_keys/pages/login.dart';
 
 void main() {
@@ -15,7 +16,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Resto Keys',
       initialRoute: '/',
-      routes: {'/': (BuildContext context) => const LoginPage()},
+      routes: {
+        '/': (BuildContext context) => const LoginPage(),
+        '/dashboard': (BuildContext context) => const DashboardPage()
+      },
     );
   }
 }
