@@ -12,8 +12,10 @@ class BInput extends StatefulWidget {
   final bool? obscureText;
   final Function(TextEditingController controller, String value)? onChange;
   final TextInputType? inputType;
+  final String? errorText;
   const BInput(
       {Key? key,
+      this.errorText,
       this.label,
       this.disabled,
       this.prependIconName,
@@ -40,7 +42,9 @@ class _BInputState extends State<BInput> {
         Text(
           widget.label ?? 'NA',
           style: useGetTextVariant('text-2',
-              fontWeight: widget.labelFontWeight ?? 400),
+              fontWeight: widget.labelFontWeight ?? 400,
+              color:
+                  widget.errorText != null ? Colors.redAccent : Colors.black),
         ),
         const SizedBox(
           height: 8,
@@ -51,10 +55,13 @@ class _BInputState extends State<BInput> {
           controller: controller,
           onChanged: (value) {
             if (widget.onChange != null) {
-              widget.onChange!(controller, value);
+              setState(() {
+                widget.onChange!(controller, value);
+              });
             }
           },
           decoration: InputDecoration(
+              errorText: widget.errorText,
               suffixIcon: widget.appendIconName != null
                   ? IconButton(
                       icon: Icon(widget.appendIconName),

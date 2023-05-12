@@ -1,3 +1,4 @@
+import 'package:encrypt/encrypt.dart' as Salsa;
 import 'package:flutter/material.dart';
 import 'package:resto_keys/components/BInput.dart';
 import 'package:resto_keys/composables/useServices.dart';
@@ -10,6 +11,7 @@ class RegistarPage extends StatefulWidget {
 }
 
 class _RegistarPageState extends State<RegistarPage> {
+  final api = ApiClient();
   String email = '';
   String userName = '';
   String password = '';
@@ -18,60 +20,82 @@ class _RegistarPageState extends State<RegistarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            Container(
-              child: isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : Container(),
-            ),
-            BInput(
-              label: 'Correo',
-              onChange: (controller, value) {
-                email = value;
-              },
-            ),
-            BInput(
-              label: 'Nombre de usuario',
-              onChange: (cotroller, value) {
-                userName = value;
-              },
-            ),
-            BInput(
-              label: 'Contraseña',
-              onChange: (controller, value) {
-                password = value;
-              },
-            ),
-            TextButton(
-                style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    maximumSize: Size(150, 60),
-                    backgroundColor: Colors.blueAccent,
-                    fixedSize: const Size(150, 60)),
-                onPressed: () {
-                  registerUser();
-                },
-                child: const Text(
-                  'Registrarse',
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    children: [
+                      BInput(
+                        errorText: null,
+                        label: 'Correo',
+                        onChange: (controller, value) {
+                          email = value;
+                          setState(() {});
+                        },
+                      ),
+                      BInput(
+                        label: 'Nombre de usuario',
+                        onChange: (cotroller, value) {
+                          userName = value;
+                          setState(() {});
+                        },
+                      ),
+                      BInput(
+                        label: 'Contraseña',
+                        onChange: (controller, value) {
+                          password = value;
+                          setState(() {});
+                        },
+                      ),
+                      TextButton(
+                          style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              maximumSize: Size(150, 60),
+                              backgroundColor:
+                                  canRequest ? Colors.blueAccent : Colors.grey,
+                              fixedSize: const Size(150, 60)),
+                          onPressed: () {
+                            if (canRequest) {
+                              registerUser();
+                            }
+                          },
+                          child: const Text(
+                            'Registrarse',
+                          )),
+                    ],
+                  ),
                 )),
-          ],
-        ),
-      )),
     );
+  }
+
+  bool get canRequest {
+    final passwordRegex = RegExp('.{6}');
+    passwordRegex.hasMatch(password);
+    if (passwordRegex.hasMatch(password) && email != '' && userName != '') {
+      return true;
+    }
+    return false;
   }
 
   registerUser() async {
     try {
+      final key = Salsa.Key.fromLength(32);
+      final iv = Salsa.IV.fromLength(8);
+      final encrypter = Salsa.Encrypter(Salsa.Salsa20(key));
+      final encrypted = encrypter.encrypt(password, iv: iv);
       isLoading = true;
-      final response = await useRegisUser(email, userName, password);
+      print(encrypted.base64);
+      setState(() {});
+      final request = await api.POST(ApiPaths.CreateUser,
+          {"password": encrypted.base64, "userName": userName, "email": email});
+      print(request);
       isLoading = false;
+      setState(() {});
     } catch (e) {
-      print('Error abajo');
-      isLoading = false;
       print(e);
+      isLoading = false;
+      setState(() {});
     }
   }
 }
