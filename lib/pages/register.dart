@@ -1,7 +1,8 @@
-import 'package:encrypt/encrypt.dart' as Salsa;
 import 'package:flutter/material.dart';
 import 'package:resto_keys/components/BInput.dart';
 import 'package:resto_keys/composables/useServices.dart';
+
+import '../classes/EncrypterHandler.dart';
 
 class RegistarPage extends StatefulWidget {
   const RegistarPage({Key? key}) : super(key: key);
@@ -80,16 +81,13 @@ class _RegistarPageState extends State<RegistarPage> {
 
   registerUser() async {
     try {
-      final key = Salsa.Key.fromLength(32);
-      final iv = Salsa.IV.fromLength(8);
-      final encrypter = Salsa.Encrypter(Salsa.Salsa20(key));
-      final encrypted = encrypter.encrypt(password, iv: iv);
+      final encryptedPassword = EncrypterHandler.encryptPassword(password);
+      final decryptedPassword =
+          EncrypterHandler.decodePassword('9/6mNOEjHn6gSQ9IIZM=');
+      final api = ApiClient();
+      api.createUser(userName, email, encryptedPassword);
       isLoading = true;
-      print(encrypted.base64);
       setState(() {});
-      final request = await api.POST(ApiPaths.CreateUser,
-          {"password": encrypted.base64, "userName": userName, "email": email});
-      print(request);
       isLoading = false;
       setState(() {});
     } catch (e) {

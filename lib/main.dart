@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resto_keys/pages/dashboard.dart';
 import 'package:resto_keys/pages/login.dart';
+import 'package:resto_keys/pages/passwordsListView.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (BuildContext context) => const LoginPage(),
-        '/dashboard': (BuildContext context) => const DashboardPage()
+        '/dashboard': (BuildContext context) => const DashboardPage(),
+        '/passwords': (BuildContext context) => const PasswordsListView()
       },
     );
   }

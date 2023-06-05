@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resto_keys/components/BInput.dart';
 import 'package:resto_keys/composables/useGetTextVariant.dart';
+import 'package:resto_keys/composables/useServices.dart';
 import 'package:resto_keys/pages/register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -36,9 +37,12 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 24,
               ),
-              const BInput(
+              BInput(
                 label: 'Contraseña',
                 obscureText: true,
+                onChange: (controller, value) {
+                  userPassword = value;
+                },
               ),
               SizedBox(height: 64),
               Row(
@@ -52,7 +56,9 @@ class _LoginPageState extends State<LoginPage> {
                               maximumSize: Size(150, 60),
                               backgroundColor: Colors.blueAccent,
                               fixedSize: const Size(150, 60)),
-                          onPressed: () {},
+                          onPressed: () {
+                            login(context);
+                          },
                           child: const Text(
                             'Iniciar sesión',
                           )),
@@ -73,5 +79,16 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void login(BuildContext context) async {
+    final api = ApiClient();
+    try {
+      final response = await api.login(userEmail, userPassword);
+      print(response);
+      Navigator.pushReplacementNamed(context, '/passwords');
+    } catch (e) {
+      print(e);
+    }
   }
 }
