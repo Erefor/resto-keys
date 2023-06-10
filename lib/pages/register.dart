@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resto_keys/components/BInput.dart';
-import 'package:resto_keys/composables/useServices.dart';
 
+import '../classes/ApiClient.dart';
 import '../classes/EncrypterHandler.dart';
 
 class RegistarPage extends StatefulWidget {

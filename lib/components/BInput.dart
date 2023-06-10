@@ -44,7 +44,7 @@ class _BInputState extends State<BInput> {
           style: useGetTextVariant('text-2',
               fontWeight: widget.labelFontWeight ?? 400,
               color:
-                  widget.errorText != null ? Colors.redAccent : Colors.black),
+                  widget.errorText != null ? Colors.redAccent : Colors.white),
         ),
         const SizedBox(
           height: 8,
