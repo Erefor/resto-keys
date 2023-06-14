@@ -1,8 +1,11 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:resto_keys/classes/EncrypterHandler.dart';
 
 import '../composables/useGetTextVariant.dart';
 
-class BPasswordTile extends StatelessWidget {
+class BPasswordTile extends StatefulWidget {
   final String? label;
   final String? password;
   final String? name;
@@ -10,25 +13,49 @@ class BPasswordTile extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<BPasswordTile> createState() => _BPasswordTileState();
+}
+
+class _BPasswordTileState extends State<BPasswordTile> {
+  bool showUncryptedPassword = false;
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
+    return Expanded(
       child: ListTile(
-        title: Text(
-          label ?? 'NA',
-          style: useGetTextVariant('text-1', color: Colors.white),
-        ),
+        title: Text(widget.label ?? 'NA',
+            style: useGetTextVariant('text-1',
+                color: Colors.white, fontWeight: 500),
+            overflow: TextOverflow.ellipsis),
         subtitle: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              name ?? 'NA',
-              style: useGetTextVariant('text-2', color: Colors.white),
+              widget.name ?? 'NA',
+              style: useGetTextVariant('text-2',
+                  color: Colors.white, fontWeight: 400),
+              overflow: TextOverflow.ellipsis,
             ),
             Text(
-              password ?? 'NA',
-              style: useGetTextVariant('text-2', color: Colors.white),
+              passwordText ?? 'NA',
+              style: useGetTextVariant('text-2',
+                  color: Colors.white, fontWeight: 300),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: Icon(showUncryptedPassword
+                  ? Icons.visibility_off
+                  : Icons.remove_red_eye),
+              color: Colors.white,
+              onPressed: () {
+                showUncryptedPassword = !showUncryptedPassword;
+                setState(() {});
+              },
             ),
           ],
         ),
@@ -36,5 +63,14 @@ class BPasswordTile extends StatelessWidget {
             side: BorderSide(width: 2, color: Colors.white)),
       ),
     );
+  }
+
+  void togglePasswordVisibility() {}
+
+  get passwordText {
+    if (widget.password == null || widget.password == '') return 'NA';
+    return showUncryptedPassword
+        ? EncrypterHandler.decodePassword(widget.password as String)
+        : widget.password;
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:resto_keys/classes/ApiClient.dart';
-import 'package:resto_keys/components/BButton.dart';
 import 'package:resto_keys/components/BPasswordTile.dart';
-import 'package:resto_keys/composables/useGetTextVariant.dart';
 import 'package:resto_keys/constants/Colors.dart';
 
 class PasswordsListView extends StatelessWidget {
@@ -12,24 +10,23 @@ class PasswordsListView extends StatelessWidget {
     final api = ApiClient();
     return Scaffold(
       backgroundColor: mainBackground,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, '/create-password');
+        },
+        backgroundColor: mainColor,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Column(
-            children: [
-              BButton(
-                onPressed: () =>
-                    {Navigator.pushNamed(context, '/create-password')},
-                buttonText: 'Crear contraseña',
-              ),
-              FutureBuilder(
-                builder: builderFunction,
-                initialData: [],
-                future: api.getUserPasswords(),
-              )
-            ],
-          ),
+          child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: FutureBuilder(
+          builder: builderFunction,
+          initialData: [],
+          future: api.getUserPasswords(),
         ),
       )),
     );
@@ -44,27 +41,34 @@ class PasswordsListView extends StatelessWidget {
         );
       }
       print(snapshot.data);
-      return passwordsList(snapshot.data['data']);
+      return passwordsList(snapshot.data['data'], context);
     } else if (snapshot.connectionState == ConnectionState.waiting) {
-      return const CircularProgressIndicator();
+      return Center(child: const CircularProgressIndicator());
     }
-    return const CircularProgressIndicator();
+    return Center(child: const CircularProgressIndicator());
   }
 
-  Widget passwordsList(List data) {
-    return SizedBox(
-      width: 350,
-      height: 450,
-      child: ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          return BPasswordTile(
-            label: data[index]['label'],
-            password: data[index]['value'],
-            name: data[index]['direction'],
-          );
-        },
-      ),
+  Widget passwordsList(List data, BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height - 250,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: BPasswordTile(
+                  label: data[index]['label'],
+                  password: data[index]['value'],
+                  name: data[index]['direction'],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

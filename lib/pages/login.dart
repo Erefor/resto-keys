@@ -68,12 +68,10 @@ class _LoginPageState extends State<LoginPage> {
                             buttonText: 'Iniciar sesión'),
                         TextButton(
                             onPressed: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RegistarPage()));
+                              Navigator.restorablePushReplacementNamed(
+                                  context, '/passwords');
                             },
-                            child: Text(
+                            child: const Text(
                               'Registrarse',
                               style: TextStyle(color: Colors.white),
                             ))

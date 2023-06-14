@@ -24,34 +24,47 @@ class _CreatePasswordViewState extends State<CreatePasswordView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: mainBackground,
+      appBar: AppBar(
+        backgroundColor: mainColor,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              BInput(
-                  errorText: isValidPassword ? 'Contraseña inválida' : null,
-                  label: 'Contraseña',
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              children: [
+                BInput(
+                    errorText: isValidPassword ? 'Contraseña inválida' : null,
+                    label: 'Contraseña',
+                    onChange: (controller, value) {
+                      password = value;
+                    }),
+                BInput(
+                  label: 'Nombre',
                   onChange: (controller, value) {
-                    password = value;
-                  }),
-              BInput(
-                label: 'Nombre',
-                onChange: (controller, value) {
-                  label = value;
-                },
-              ),
-              BInput(
-                  label: 'Dirección o email',
-                  onChange: (controller, value) {
-                    direction = value;
-                  }),
-              BButton(
-                onPressed: () {
-                  createPassword(context);
-                },
-                buttonText: 'Crear contraseña',
-              )
-            ],
+                    label = value;
+                  },
+                ),
+                BInput(
+                    label: 'Dirección o email',
+                    onChange: (controller, value) {
+                      direction = value;
+                    }),
+                BButton(
+                  onPressed: () {
+                    createPassword(context);
+                  },
+                  buttonText: 'Crear contraseña',
+                ),
+                BButton(
+                  onPressed: () {
+                    Navigator.restorablePushReplacementNamed(
+                        context, '/passwords');
+                  },
+                  buttonText: 'Volver',
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -65,11 +78,10 @@ class _CreatePasswordViewState extends State<CreatePasswordView> {
   void createPassword(BuildContext context) async {
     final api = ApiClient();
     try {
-      final encryptedPassword = EncrypterHandler.encryptPassword(password);
-      final response = await api.createPassword(
-          encryptedPassword, direction, label, direction);
+      final response =
+          await api.createPassword(password, direction, label, direction);
       print(response);
-      Navigator.of(context).pop();
+      Navigator.restorablePushReplacementNamed(context, '/passwords');
     } catch (e) {
       print(e);
     }
