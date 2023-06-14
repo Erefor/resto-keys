@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resto_keys/components/BButton.dart';
 import 'package:resto_keys/constants/Colors.dart';
 
 import '../classes/ApiClient.dart';
@@ -44,6 +45,12 @@ class _CreatePasswordViewState extends State<CreatePasswordView> {
                   onChange: (controller, value) {
                     direction = value;
                   }),
+              BButton(
+                onPressed: () {
+                  createPassword(context);
+                },
+                buttonText: 'Crear contraseña',
+              )
             ],
           ),
         ),

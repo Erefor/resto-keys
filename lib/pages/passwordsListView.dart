@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resto_keys/classes/ApiClient.dart';
 import 'package:resto_keys/components/BButton.dart';
+import 'package:resto_keys/components/BPasswordTile.dart';
 import 'package:resto_keys/composables/useGetTextVariant.dart';
 import 'package:resto_keys/constants/Colors.dart';
 
@@ -13,19 +14,22 @@ class PasswordsListView extends StatelessWidget {
       backgroundColor: mainBackground,
       body: SafeArea(
           child: SingleChildScrollView(
-        child: Column(
-          children: [
-            BButton(
-              onPressed: () =>
-                  {Navigator.pushNamed(context, '/create-password')},
-              buttonText: 'Crear contraseña',
-            ),
-            FutureBuilder(
-              builder: builderFunction,
-              initialData: [],
-              future: api.getUserPasswords(),
-            )
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            children: [
+              BButton(
+                onPressed: () =>
+                    {Navigator.pushNamed(context, '/create-password')},
+                buttonText: 'Crear contraseña',
+              ),
+              FutureBuilder(
+                builder: builderFunction,
+                initialData: [],
+                future: api.getUserPasswords(),
+              )
+            ],
+          ),
         ),
       )),
     );
@@ -54,15 +58,10 @@ class PasswordsListView extends StatelessWidget {
       child: ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              data[index]['label'],
-              style: useGetTextVariant('text-1', color: Colors.white),
-            ),
-            subtitle: Text(
-              data[index]['value'],
-              style: useGetTextVariant('text-1', color: Colors.white),
-            ),
+          return BPasswordTile(
+            label: data[index]['label'],
+            password: data[index]['value'],
+            name: data[index]['direction'],
           );
         },
       ),
