@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resto_keys/constants/Colors.dart';
 
 import '../classes/ApiClient.dart';
 import '../classes/EncrypterHandler.dart';
@@ -20,27 +21,32 @@ class _CreatePasswordViewState extends State<CreatePasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          BInput(
-              errorText: isValidPassword ? 'Contraseña inválida' : null,
-              label: 'Contraseña',
-              onChange: (controller, value) {
-                password = value;
-              }),
-          BInput(
-            label: 'Nombre',
-            onChange: (controller, value) {
-              label = value;
-            },
+    return Scaffold(
+      backgroundColor: mainBackground,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              BInput(
+                  errorText: isValidPassword ? 'Contraseña inválida' : null,
+                  label: 'Contraseña',
+                  onChange: (controller, value) {
+                    password = value;
+                  }),
+              BInput(
+                label: 'Nombre',
+                onChange: (controller, value) {
+                  label = value;
+                },
+              ),
+              BInput(
+                  label: 'Dirección o email',
+                  onChange: (controller, value) {
+                    direction = value;
+                  }),
+            ],
           ),
-          BInput(
-              label: 'Dirección o email',
-              onChange: (controller, value) {
-                direction = value;
-              }),
-        ],
+        ),
       ),
     );
   }
